@@ -110,6 +110,8 @@ def get_class_from_path(module_path, super_class, raise_exception=True,
 
 
 def get_class_instance(module_path, mixin, default, message_prefix, *args):
+    if module_path == 'UseDefault':
+        return default(*args)
     if module_path is not None:
         module = get_class_from_path(module_path, mixin,
                                      raise_exception=False,
