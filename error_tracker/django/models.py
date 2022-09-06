@@ -26,6 +26,7 @@ class AbstractErrorModel(models.Model, ModelMixin):
     method = models.CharField(max_length=64)
     request_data = models.TextField()
     exception_name = models.CharField(max_length=256)
+    exception_text = models.CharField(max_length=1256)
     traceback = models.TextField()
     count = models.IntegerField(default=0)
     created_on = models.DateTimeField(auto_now=True)
@@ -62,12 +63,14 @@ class AbstractErrorModel(models.Model, ModelMixin):
         return cls.objects.get(hash=rhash)
 
     @classmethod
-    def create_or_update_entity(cls, rhash, host, path, method, request_data, exception_name, traceback):
+    def create_or_update_entity(cls, rhash, host, path, method, request_data, exception_name,
+                                exception_text, traceback):
         try:
             obj, created = cls.objects.get_or_create(hash=rhash)
             if created:
                 obj.host, obj.path, obj.method, obj.request_data, obj.exception_name, obj.traceback = \
                     host, path, method, request_data, exception_name, traceback
+                obj.exception_text = exception_text
                 obj.count = 1
                 obj.save()
             else:

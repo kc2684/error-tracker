@@ -99,13 +99,15 @@ class ErrorTracker(object):
             host = ""
             method = ""
 
+
         ty, frames, frame_str, traceback_str, rhash, request_data = \
             get_context_detail(request, masking, context_builder,
                                additional_context=additional_context)
-        error = model.create_or_update_entity(rhash, host, path, method,
-                                              str(request_data),
-                                              get_exception_name(ty),
-                                              traceback_str)
+        error = model.create_or_update_entity(rhash=rhash, host=host, path=path, method=method,
+                                              request_data=str(request_data),
+                                              exception_name=get_exception_name(ty),
+                                              exception_text=str(debug_args),
+                                              traceback=traceback_str)
         ErrorTracker._post_process(request, frame_str, frames, error)
 
 
