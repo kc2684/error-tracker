@@ -27,6 +27,8 @@ def get_exception_model():
     if model_path is None:
         warnings.warn("APP_ERROR_DB_MODEL is not set. Using default model")
         return ErrorModel
+    elif model_path == 'UseDefault':
+        return ErrorModel
     try:
         return django_apps.get_model(model_path, require_ready=False)
     except ValueError:
