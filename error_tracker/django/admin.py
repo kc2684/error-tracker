@@ -14,6 +14,7 @@ if APP_ERROR_USE_DJANGO_ADMIN_SITE:
             'path',
             'method',
             'exception_name',
+            'exception_text',
             'count',
             'created_on',
             'last_seen',
@@ -25,7 +26,7 @@ if APP_ERROR_USE_DJANGO_ADMIN_SITE:
             'notification_sent',
             'ticket_raised',
         )
-        search_fields = ('host', 'path', 'exception_name',)
+        search_fields = ('host', 'path', 'exception_name', 'exception_text',)
         change_form_template = 'error_tracker/admin/change_form.html'
 
         def changeform_view(self, request, object_id=None, form_url='', extra_context=None):

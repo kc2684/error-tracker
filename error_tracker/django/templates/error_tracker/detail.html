@@ -17,6 +17,17 @@
         </div>
     </div>
 
+<div class="row mb-4">
+        <div class="col-md-2 bg-dark p-1 text-white text-center font-weight-bold">{%trans 'Type' %}</div>
+        <div class="col-md-10 bg-dark p-1 text-white text-center font-weight-bold">{%trans 'Text' %}</div>
+        <div class="col-md-2  p-1 text-center bg-light">
+            {{ obj.exception_name }}
+        </div>
+        <div class="col-md-10  p-1 text-center bg-light">
+            {{ obj.exception_text }}
+        </div>
+    </div>
+
     <div class="row mb-4 mt-2">
         <div class="col-md-4 p-0">
             <div class="col-md-12 text-center bg-dark text-white font-weight-bold p-0">{%trans 'First time seen' %}</div>
