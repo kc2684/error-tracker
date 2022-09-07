@@ -13,6 +13,7 @@ import six
 
 from error_tracker.libs.exception_formatter import format_exception
 from error_tracker.libs.mixins import MaskingMixin
+from error_tracker.django.settings import APP_ERROR_SUPPRESS_DEFAULT_WARNING
 
 
 class Masking(MaskingMixin):
@@ -119,8 +120,9 @@ def get_class_instance(module_path, mixin, default, message_prefix, *args):
         if module is not None:
             return module(*args)
     if default is not None:
-        message = "Default " + message_prefix + " module will be used"
-        warnings.warn(message)
+        if not APP_ERROR_SUPPRESS_DEFAULT_WARNING:
+            message = "Default " + message_prefix + " module will be used"
+            warnings.warn(message)
         return default(*args)
 
 

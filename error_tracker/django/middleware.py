@@ -61,21 +61,10 @@ class ErrorTracker(object):
 
     @staticmethod
     def _post_process(request, frame_str, frames, error):
-        send_notification = True
-        raise_ticket = True
-        
-        if request is not None:
-            message = ('URL: %s' % request.path) + '\n\n'
-        else:
-            message = ""
+        message = f'URL: {request.path}' + '\n\n' if request is not None else ""
         message += frame_str
-
-        if APP_ERROR_NOTIFICATION_ONCE is True and error.notification_sent is True:
-            send_notification = False
-
-        if APP_ERROR_TICKET_ONCE is True and error.ticket_raised is True:
-            raise_ticket = False
-
+        send_notification = APP_ERROR_NOTIFICATION_ONCE is not True or error.notification_sent is not True
+        raise_ticket = APP_ERROR_TICKET_ONCE is not True or error.ticket_raised is not True
         if send_notification:
             ErrorTracker._send_notification(request, message, frames[-1][:-1], error)
         if raise_ticket:
@@ -98,7 +87,6 @@ class ErrorTracker(object):
             path = ""
             host = ""
             method = ""
-
 
         ty, frames, frame_str, traceback_str, rhash, request_data = \
             get_context_detail(request, masking, context_builder,

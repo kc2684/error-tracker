@@ -6,6 +6,7 @@
 #    :license: BSD-3-Clause
 #
 
+import contextlib
 import json
 import re
 
@@ -32,17 +33,13 @@ class DefaultDjangoContextBuilder(ContextBuilderMixin):
             try:
                 body = request.data
             except AttributeError:
-                try:
+                with contextlib.suppress(RawPostDataException):
                     body = request.body
-                except RawPostDataException:
-                    pass
             if body is not None:
-                try:
+                with contextlib.suppress(ImportError):
                     from rest_framework.request import Request
                     if isinstance(body, Request):
                         form = body.data
-                except ImportError:
-                    pass
                 if len(form) == 0 and len(body) > 0:
                     try:
                         form = json.loads(body, encoding="UTF-8")

@@ -25,21 +25,18 @@ def get_exception_model():
     from .models import ErrorModel
     model_path = APP_ERROR_DB_MODEL
     if model_path is None:
-        warnings.warn("APP_ERROR_DB_MODEL is not set. Using default model")
-        return ErrorModel
-    elif model_path == 'UseDefault':
+        if not APP_ERROR_SUPPRESS_DEFAULT_WARNING:
+            warnings.warn("APP_ERROR_DB_MODEL is not set. Using default model")
         return ErrorModel
     try:
         return django_apps.get_model(model_path, require_ready=False)
     except ValueError:
-        model = get_class_from_path(model_path, ModelMixin, raise_exception=False,
-                                    warning_message="Model " + model_path + " is not importable")
+        model = get_class_from_path(model_path, ModelMixin, raise_exception=False, warning_message=f"Model {model_path} is not importable")
         if model is not None:
             return model
         warnings.warn("APP_ERROR_DB_MODEL must be of the form 'app_label.model_name'")
     except LookupError:
-        model = get_class_from_path(model_path, ModelMixin, raise_exception=False,
-                                    warning_message="Model " + model_path + " is not importable")
+        model = get_class_from_path(model_path, ModelMixin, raise_exception=False, warning_message=f"Model {model_path} is not importable")
         if model is not None:
             return model
         warnings.warn(
