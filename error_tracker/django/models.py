@@ -40,21 +40,14 @@ class AbstractErrorModel(models.Model, ModelMixin):
             if 'page' in query:
                 page_number = query['page']
                 del query['page']
-            query = {"{}__icontains".format(k): v for k, v in query.items()}
-        
-        if not query:
-            records = cls.objects.all().order_by('last_seen')
-        else:
-            records = cls.objects.filter(**query).order_by('last_seen')
+            query = {f"{k}__icontains": v for k, v in query.items()}
+        records = cls.objects.filter(**query).order_by('last_seen') if query else cls.objects.all().order_by('last_seen')
 
         paginator = Paginator(records, EXCEPTION_APP_DEFAULT_LIST_SIZE)
         try:
             page = paginator.page(page_number)
-            return Page(page.has_next(),
-                        page.next_page_number() if page.has_next() else None,
-                        page.has_previous(),
-                        page.previous_page_number() if page.has_previous() else None,
-                        page.object_list)
+            return Page(page.has_next(), page.next_page_number() if page.has_next() else None, page.has_previous(), page.previous_page_number() if page.has_previous() else None, page.object_list)
+
         except EmptyPage:
             return Page(False, None, True, paginator.num_pages, [])
 
@@ -63,8 +56,7 @@ class AbstractErrorModel(models.Model, ModelMixin):
         return cls.objects.get(hash=rhash)
 
     @classmethod
-    def create_or_update_entity(cls, rhash, host, path, method, request_data, exception_name,
-                                exception_text, traceback):
+    def create_or_update_entity(cls, rhash, host, path, method, request_data, exception_name, exception_text, traceback):
         try:
             obj, created = cls.objects.get_or_create(hash=rhash)
             if created:
