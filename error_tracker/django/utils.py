@@ -29,7 +29,6 @@ class DefaultDjangoContextBuilder(ContextBuilderMixin):
             return form
         post = request.POST
         if post is None or len(post) == 0:
-            body = None
             try:
                 body = request.data
             except AttributeError:

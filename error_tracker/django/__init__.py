@@ -36,7 +36,8 @@ def get_exception_model():
             return model
         warnings.warn("APP_ERROR_DB_MODEL must be of the form 'app_label.model_name'")
     except LookupError:
-        model = get_class_from_path(model_path, ModelMixin, raise_exception=False, warning_message=f"Model {model_path} is not importable")
+        model = get_class_from_path(model_path, ModelMixin, raise_exception=False,
+                                    warning_message=f"Model {model_path} is not importable")
         if model is not None:
             return model
         warnings.warn(

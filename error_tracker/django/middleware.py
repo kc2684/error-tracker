@@ -94,7 +94,7 @@ class ErrorTracker(object):
         error = model.create_or_update_entity(rhash=rhash, host=host, path=path, method=method,
                                               request_data=str(request_data),
                                               exception_name=get_exception_name(ty),
-                                              exception_text=str(debug_args),
+                                              exception_text=str(exception.args),
                                               traceback=traceback_str)
         ErrorTracker._post_process(request, frame_str, frames, error)
 
